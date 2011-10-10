@@ -5,7 +5,7 @@ Installation
 ------------
     gem install tableize
 
-Examples
+Usage
 -----
 #### Basic
     table_for Post, @posts do |t|
@@ -40,7 +40,7 @@ Both examples generate the following html:
 * Inherited Resources
 
     By default, `Tableize` will search for both `resource_class` and `collection` methods. So you don't have to specify them each time, unless
-    of course you want to override the default behavior. That being said, the following code produce the exact same output as the basic example
+    of course you want to override the default behavior. That being said, the following code produces the exact same output as the basic example
     above.
 
         table_for do |t|
@@ -50,7 +50,7 @@ Both examples generate the following html:
 
 * I18n
 
-    By default, `Tableize` will try to internationalised your attribute, so you don't have to name each of your column. So, assuming my
+    By default, `Tableize` will try to internationalise your attribute, so you don't have to name each of your column. So, assuming my
     model responds to `human_attribute_name`, the following example still produces the exact same output.
 
         table_for do |t|
@@ -93,7 +93,7 @@ Both examples generate the following html:
 
 * Extras
 
-    Let's say `author` is a relation, and you want to show his first name and last name as separate columns. The following would works:
+    Let's say `author` is a relation, and you want to show his first name and last name as two separate columns. The following would works:
 
         table_for do |t|
             t.column "First name", :author do |author|
