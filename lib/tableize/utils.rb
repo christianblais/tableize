@@ -1,11 +1,5 @@
 module Tableize
-  def self.convert_to_array(array, *args)
-    array = [array].flatten.compact
-
-    args.each do |arg|
-      array.push(arg)
-    end
-
-    array
+  def self.convert_to_array(element, *args)
+    [element].flatten.compact.push(*args)
   end
 end
