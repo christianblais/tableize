@@ -13,6 +13,8 @@ module Tableize
       @collection     = get_collection(args)
       @columns        = []
       @extras         = []
+
+      define_custom_columns!
     end
 
     def defaults
@@ -98,6 +100,21 @@ module Tableize
         @options[:collection]
       elsif @view_context.respond_to?(:collection)
         @view_context.collection
+      end
+    end
+
+    def define_custom_columns!
+      Tableize::Configuration.custom_columns.each do |name, custom_column|
+        custom_column.create!
+
+        th = custom_column.get(:th)
+        td = custom_column.get(:td)
+
+        self.class_eval do
+          send :define_method, name do
+            @columns << Tableize::ColumnBuilder.new(@resource_class, :title => th.last.call(@resource_class), :th => th.first, :td => td.first, &td.last)
+          end
+        end
       end
     end
 

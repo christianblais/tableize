@@ -8,9 +8,9 @@ Tableize::Configuration.configure do |config|
   end
 
   # default th options
-  config.th_options = lambda do |*args|
+  config.th_options = lambda do |field, type|
     {
-      :class => args.compact.map{ |a| a.to_s.underscore }
+      :class => [field, type].compact.map{ |a| a.to_s.underscore }
     }
   end
 
@@ -20,7 +20,18 @@ Tableize::Configuration.configure do |config|
       :class => "#{resource.class.model_name.underscore}_#{resource.id}"
     }
   end
-  
+
+  # custom column builder
+  config.custom_column :title do |column|
+    column.th :class => "sortable" do |resource_class|
+      "test my th"
+    end
+
+    column.td :class => "handle" do |resource|
+      resource.title
+    end
+  end
+
 end
 
 ActionView::Base.send(:include, Tableize)

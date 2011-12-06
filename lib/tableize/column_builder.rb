@@ -34,11 +34,11 @@ module Tableize
     protected
 
     def get_title(args)
-      if title = args.first
+      if @options.key?(:title)
+        @options[:title].to_s
+      elsif title = args.first
         if title.kind_of?(String)
           args.shift
-        elsif @options.key?(:title)
-          @options[:title].to_s
         elsif title.kind_of?(Symbol) && @resource_class.respond_to?(:human_attribute_name)
           @resource_class.send(:human_attribute_name, title)
         else
