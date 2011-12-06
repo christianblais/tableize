@@ -1,3 +1,5 @@
-= table_for Post, [{"title" => "Hello World", :author => "Christian Blais"}] do |t|
-  - t.column "title", "title"
+= table do |t|
+  - t.column do |r|
+    %div
+      = "salut"
   - t.column :author

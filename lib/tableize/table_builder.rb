@@ -3,16 +3,11 @@ module Tableize
 
     delegate :content_tag, :to => :@view_context
 
-    DEFAULT_OPTIONS = {
-      :default_table_class  => true,
-      :default_tr_class     => true
-    }
-
     def initialize(view_context, *args, &block)
-      @options        = DEFAULT_OPTIONS.merge(args.extract_options!)
+      @view_context   = view_context
+      @options        = args.extract_options!
       @table_options  = @options.delete(:html) || {}
       @tr_options     = @table_options.delete(:tr) || {}
-      @view_context   = view_context
       @block          = block
       @resource_class = get_resource_class(args)
       @collection     = get_collection(args)
@@ -41,7 +36,7 @@ module Tableize
     end
 
     def render
-      @view_context.capture{ @block.call(self) }
+      @view_context.capture(self, &@block)
 
       content_tag(:table, table_options) do
         [thead, tbody].join.html_safe
@@ -79,31 +74,11 @@ module Tableize
     end
 
     def table_options
-      options = @table_options.dup
-
-      if @options[:default_table_class] && @resource_class.respond_to?(:model_name)
-        options[:class] = Tableize::convert_to_array(options[:class], @resource_class.model_name.tableize)
-      end
-
-      options
+      Tableize::Configuration.table_options.call(@resource_class).merge(@table_options)
     end
 
     def tr_options(resource)
-      options = @tr_options.dup
-
-      if @options[:default_tr_class] && @resource_class.respond_to?(:model_name)
-        options[:class] = Tableize::convert_to_array(options[:class], "#{@resource_class.model_name.underscore}_#{get_resource_id(resource)}")
-      end
-
-      options
-    end
-
-    def get_resource_id(resource)
-      if resource.respond_to?(:id)
-        resource.id
-      elsif resource.kind_of?(Hash)
-        resource[:id] || resource["id"]
-      end
+      Tableize::Configuration.tr_options.call(resource).merge(@tr_options)
     end
 
     def get_resource_class(args)
