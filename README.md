@@ -4,9 +4,11 @@ Tableize
 Installation
 ------------
 First, install the gem
+
     gem install tableize
 
 In an initializer, include the `Tableize` module
+
     ActionView::Base.send(:include, Tableize)
 
 Usage
