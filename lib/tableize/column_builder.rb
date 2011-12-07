@@ -28,7 +28,7 @@ module Tableize
     end
 
     def th_options
-      Tableize::Configuration.th_options.call((@method || @title).try(:to_s), value_type).merge(@th_options)
+      Tableize.merge_values(Tableize::Configuration.th_options.try(:call, (@method || @title).try(:to_s), value_type), @th_options)
     end
 
     protected

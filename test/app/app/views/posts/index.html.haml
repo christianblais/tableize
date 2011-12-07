@@ -1,4 +1,5 @@
-= table :html => {:class => "salut", :id => "pouet"} do |t|
-  - t.title
-  - t.column :title
-  - t.column :author
+- collection = [{:title => "Hello World", "author" => "Christian Blais"}]
+
+= table_for Post, collection do |t|
+    - t.column :title
+    - t.column "author", "author"

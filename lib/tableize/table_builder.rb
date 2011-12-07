@@ -77,11 +77,11 @@ module Tableize
     end
 
     def table_options
-      Tableize.merge_values(Tableize::Configuration.table_options.call(@resource_class), @table_options)
+      Tableize.merge_values(Tableize::Configuration.table_options.try(:call, @resource_class), @table_options)
     end
 
     def tr_options(resource)
-      Tableize.merge_values(Tableize::Configuration.tr_options.call(resource), @tr_options)
+      Tableize.merge_values(Tableize::Configuration.tr_options.try(:call, resource), @tr_options)
     end
 
     def get_resource_class(args)
