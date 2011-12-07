@@ -14,6 +14,7 @@ In an initializer, include the `Tableize` module
 Usage
 -----
 The simplest scenario
+
     table_for Post, @posts do |t|
       t.column "Title", :title
       t.column "Author", :author
@@ -148,31 +149,34 @@ Both examples generate the following html
 Here are the defaults used in the first example.
 
 * table_options
-This option let you set default values for all your tables. It must be a lambda that returns a hash. The lambda receive one argument, which is the resource class, when available.
 
-    config.table_options = lambda do |resource_class|
-      {
-        :class => "#{resource_class.model_name.tableize}"
-      }
-    end
+    This option let you set default values for all your tables. It must be a lambda that returns a hash. The lambda receive one argument, which is the resource class, when available.
+
+        config.table_options = lambda do |resource_class|
+          {
+            :class => "#{resource_class.model_name.tableize}"
+          }
+        end
 
 * th_options
-This option let you set default values for all your th cells. It must be a lambda that returns a hash. The lambda receive two arguments; the field name and it's value type.
 
-    config.th_options = lambda do |field, type|
-      {
-        :class => [field, type].compact.map{ |a| a.to_s.underscore }
-      }
-    end
+    This option let you set default values for all your th cells. It must be a lambda that returns a hash. The lambda receive two arguments; the field name and it's value type.
+
+        config.th_options = lambda do |field, type|
+          {
+            :class => [field, type].compact.map{ |a| a.to_s.underscore }
+          }
+        end
 
 * tr_options
-This option let you set default values for all your rows. It must be a lambda that returns a hash. The lambda receive the resource as a single argument.
 
-    config.tr_options = lambda do |resource|
-      {
-        :class => "#{resource.class.model_name.underscore}_#{resource.id}"
-      }
-    end
+    This option let you set default values for all your rows. It must be a lambda that returns a hash. The lambda receive the resource as a single argument.
+
+        config.tr_options = lambda do |resource|
+          {
+            :class => "#{resource.class.model_name.underscore}_#{resource.id}"
+          }
+        end
 
 #### Custom column
 Let's suppose you are doing an admin section and that you always need a column to display the resource's name with a link to that resource's show page.
@@ -185,7 +189,7 @@ The following would work, but it's pretty long if you need to do that all the ti
       end
     end
 
-What about your own column type?
+What about your own column type? In the configuration file, add this
 
     config.custom_column :title, :html => {:class => "titleized"} do |column|
       column.th :class => "title_th" do |resource_class|
