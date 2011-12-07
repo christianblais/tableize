@@ -32,13 +32,13 @@ module Tableize
         custom_columns.each do |name, custom_column|
           custom_column.generate!
 
-          th_options, th = custom_column.get(:th)
-          td_options, td = custom_column.get(:td)
+          th_options, title = custom_column.get(:th)
+          td_options, block = custom_column.get(:td)
 
           Tableize::TableBuilder.class_eval do
             define_method name do
               # add the column to the list
-              @columns << Tableize::ColumnBuilder.new(@resource_class, th.try(:call, @resource_class), :th => th_options, :td => td_options, &td)
+              @columns << Tableize::ColumnBuilder.new(@resource_class, title.try(:call, @resource_class), :th => th_options, :td => td_options, &block)
               # merge options with table options
               @options = Tableize.merge_values(@options, custom_column.options)
             end

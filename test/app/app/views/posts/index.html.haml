@@ -1,5 +1,2 @@
-- collection = [{:title => "Hello World", "author" => "Christian Blais"}]
-
-= table_for Post, collection do |t|
-    - t.column :title
-    - t.column "author", "author"
+= table do |t|
+  = t.title
