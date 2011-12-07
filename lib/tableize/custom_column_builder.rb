@@ -1,5 +1,8 @@
 module Tableize
   class CustomColumnBuilder
+
+    attr_reader :options
+
     def initialize(name, *args, &block)
       @name     = name
       @options  = args.extract_options!
@@ -7,7 +10,7 @@ module Tableize
       @fields   = {}
     end
 
-    def create!
+    def generate!
       @block.call(self) if @block
     end
 

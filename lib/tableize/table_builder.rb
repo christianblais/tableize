@@ -6,15 +6,11 @@ module Tableize
     def initialize(view_context, *args, &block)
       @view_context   = view_context
       @options        = args.extract_options!
-      @table_options  = @options.delete(:html) || {}
-      @tr_options     = @table_options.delete(:tr) || {}
       @block          = block
       @resource_class = get_resource_class(args)
       @collection     = get_collection(args)
       @columns        = []
       @extras         = []
-
-      define_custom_columns!
     end
 
     def defaults
@@ -40,6 +36,11 @@ module Tableize
     def render
       @view_context.capture(self, &@block)
 
+      # extract useful options
+      @table_options  = @options.delete(:html) || {}
+      @tr_options     = @table_options.delete(:tr) || {}
+
+      # render to string
       content_tag(:table, table_options) do
         [thead, tbody].join.html_safe
       end
@@ -76,11 +77,11 @@ module Tableize
     end
 
     def table_options
-      Tableize::Configuration.table_options.call(@resource_class).merge(@table_options)
+      Tableize.merge_values(Tableize::Configuration.table_options.call(@resource_class), @table_options)
     end
 
     def tr_options(resource)
-      Tableize::Configuration.tr_options.call(resource).merge(@tr_options)
+      Tableize.merge_values(Tableize::Configuration.tr_options.call(resource), @tr_options)
     end
 
     def get_resource_class(args)
@@ -100,21 +101,6 @@ module Tableize
         @options[:collection]
       elsif @view_context.respond_to?(:collection)
         @view_context.collection
-      end
-    end
-
-    def define_custom_columns!
-      Tableize::Configuration.custom_columns.each do |name, custom_column|
-        custom_column.create!
-
-        th = custom_column.get(:th)
-        td = custom_column.get(:td)
-
-        self.class_eval do
-          send :define_method, name do
-            @columns << Tableize::ColumnBuilder.new(@resource_class, :title => th.last.call(@resource_class), :th => th.first, :td => td.first, &td.last)
-          end
-        end
       end
     end
 

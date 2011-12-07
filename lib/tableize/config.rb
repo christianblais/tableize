@@ -11,7 +11,11 @@ module Tableize
       end
 
       def configure!
-        @configuration.call(self) if @configuration
+        if @configuration
+          @configuration.call(self)
+
+          define_custom_columns!
+        end
       end
 
       def custom_columns
@@ -24,11 +28,29 @@ module Tableize
 
       protected
 
+      def define_custom_columns!
+        custom_columns.each do |name, custom_column|
+          custom_column.generate!
+
+          th_options, th = custom_column.get(:th)
+          td_options, td = custom_column.get(:td)
+
+          Tableize::TableBuilder.class_eval do
+            define_method name do
+              # add the column to the list
+              @columns << Tableize::ColumnBuilder.new(@resource_class, th.try(:call, @resource_class), :th => th_options, :td => td_options, &td)
+              # merge options with table options
+              @options = Tableize.merge_values(@options, custom_column.options)
+            end
+          end
+        end
+      end
+
       def init!
         @defaults = {
           :@table_options => nil,
-          :@th_options => nil,
-          :@tr_options => nil
+          :@th_options    => nil,
+          :@tr_options    => nil
         }
       end
 

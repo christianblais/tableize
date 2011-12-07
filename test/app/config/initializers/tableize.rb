@@ -22,7 +22,7 @@ Tableize::Configuration.configure do |config|
   end
 
   # custom column builder
-  config.custom_column :title do |column|
+  config.custom_column :title, :html => {:class => "bonjour"} do |column|
     column.th :class => "sortable" do |resource_class|
       "test my th"
     end
